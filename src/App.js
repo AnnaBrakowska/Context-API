@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import "./App.css";
 const FirstContext = React.createContext();
 
-class MyProvider extends Component {
+class Provider extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fruits: ["bananas", "oranges", "apples"],
-      vegetables: ["tomato", "cucumber", "lettuce"]
+      fruit: "banana",
+      amount: 0
     };
   }
 
@@ -15,11 +15,12 @@ class MyProvider extends Component {
     return (
       <FirstContext.Provider
         value={{
-          state: this.state,
-          addFruits: () => {
-            let newFruits = [...this.state.fruits];
-            newFruits.push("kiwi");
-            this.setState({ fruits: newFruits });
+          fruit: this.state.fruit,
+          amount: this.state.amount,
+          addBananas: () => {
+            let amount = this.state.amount;
+            amount += 1;
+            this.setState({ amount: amount });
           }
         }}
       >
@@ -32,47 +33,28 @@ class MyProvider extends Component {
 class App extends Component {
   render() {
     return (
-      <MyProvider>
+      <Provider>
         <div>
-          <FruitBox />
-          <VeggieBox />
+          <FruitComponent />
         </div>
-      </MyProvider>
+      </Provider>
     );
   }
 }
 
-const FruitBox = props => {
+const FruitComponent = props => {
   return (
     <div>
       <h1>I am a fruit box</h1>
       <ul>
         <FirstContext.Consumer>
-          {context =>
-            context.state.fruits.map((fruit, index) => (
-              <li key={`fruit-${index}`}>
-                {fruit}
-                <button onClick={context.addFruits}>Add Kiwi</button>
-              </li>
-            ))
-          }
-        </FirstContext.Consumer>
-      </ul>
-    </div>
-  );
-};
-
-const VeggieBox = props => {
-  return (
-    <div>
-      <h1>I am a veggie Box</h1>
-      <ul>
-        <FirstContext.Consumer>
-          {context =>
-            context.state.vegetables.map((veggie, index) => (
-              <li key={`veggie-${index}`}>{veggie}</li>
-            ))
-          }
+          {context => (
+            <>
+              <div>My favorite fruit is {context.fruit}</div>
+              <div>I ate: {context.amount} of them</div>
+              <button onClick={context.addBananas}>I ate more</button>
+            </>
+          )}
         </FirstContext.Consumer>
       </ul>
     </div>
