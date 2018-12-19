@@ -13,7 +13,16 @@ class MyProvider extends Component {
 
   render() {
     return (
-      <FirstContext.Provider value={{ state: this.state }}>
+      <FirstContext.Provider
+        value={{
+          state: this.state,
+          addFruits: () => {
+            let newFruits = [...this.state.fruits];
+            newFruits.push("kiwi");
+            this.setState({ fruits: newFruits });
+          }
+        }}
+      >
         {this.props.children}
       </FirstContext.Provider>
     );
@@ -41,7 +50,10 @@ const FruitBox = props => {
         <FirstContext.Consumer>
           {context =>
             context.state.fruits.map((fruit, index) => (
-              <li key={`fruit-${index}`}>{fruit}</li>
+              <li key={`fruit-${index}`}>
+                {fruit}
+                <button onClick={context.addFruits}>Add Kiwi</button>
+              </li>
             ))
           }
         </FirstContext.Consumer>
